@@ -1,2 +1,2 @@
 @main def hello(): Unit =
-  RunCodes.runCodes("dog");
+  RunCodes.runCodes("lion");
