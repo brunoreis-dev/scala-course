@@ -12,7 +12,7 @@ object RunCodes {
 
     // to Make a Map method on a number list and multiply the values for 2
     val numbers: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9);
-    val multiply_numbers = numbers.map(number * 2);
+    val multiply_numbers = numbers.map(_ * 2);
 
     println(multiply_numbers);
 
