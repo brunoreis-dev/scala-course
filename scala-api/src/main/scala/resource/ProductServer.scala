@@ -1,14 +1,17 @@
 package resource
 
 import akka.actor.ActorSystem
+import model.Product
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import service.ProductService
-import model.Product
 import spray.json.DefaultJsonProtocol._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util._
 
-class ProductServer extends App {
+object ProductServer extends App {
   implicit val system = ActorSystem("ProductServer")
 
   val productService = new ProductService()
@@ -20,18 +23,20 @@ class ProductServer extends App {
       complete("Success!")
     }
   } ~ path("products" / "test") {
-    complete("Verified!")
+    get {
+      complete("Verified!")
+    }
   } ~ path("products") {
     get {
       onComplete(productService.getAllProducts()) {
-        case util.Success(res) =>  complete(res)
-        case util.Failure(exception) => complete(StatusCodes.InternalServerError)
+        case Success(res) =>  complete(res)
+        case Failure(exception) => complete(StatusCodes.InternalServerError)
       }
     } ~ post {
       entity(as[Product]) {product =>
         onComplete(productService.saveProduct(product)) {
-          case util.Success(res) =>  complete(res)
-          case util.Failure(exception) => complete(StatusCodes.InternalServerError)
+          case Success(res) =>  complete(res)
+          case Failure(exception) => complete(StatusCodes.InternalServerError)
         }
       }
     }
